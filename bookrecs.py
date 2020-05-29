@@ -49,17 +49,17 @@ def addDotProd(arr1, arr2):
 
 def recommend(person, howMany=2):
     '''Produce the reccomended books given each friend'''
-    howManyInt = int(howMany)
+    howManyInt = int(howMany) #convert arg to an integer
     
     pers = person
 
     listOfFriendDots = []
-    for friend in masterFriendList:
+    for friend in masterFriendList: #get each key from friendlist
         listOfFriendDots.append(readerObj.get(friend))
 
 
     zippedListOfFriends = []
-    for items in zip(*listOfFriendDots[:howManyInt]):
+    for items in zip(*listOfFriendDots[:howManyInt]): #zip all of the dot prods
         zippedListOfFriends.append(items)
         
         
@@ -68,11 +68,11 @@ def recommend(person, howMany=2):
     
     maxOfFriendDots = []
     for tup in zippedListOfFriends:
-        maxOfFriendDots.append(max(tup)) 
+        maxOfFriendDots.append(max(tup)) #find the max number from each dot prod
 
     zippedTotal = list(zip(maxOfFriendDots, persDots))
     iterator = 1
-    for tup in zippedTotal:
+    for tup in zippedTotal: #determine if book should be recommended
         if tup[0] >= 3 and tup[1] == 0:
             newVal = zippedTotal.index(tup)
             zippedTotal[newVal] = iterator
@@ -100,15 +100,14 @@ def friends(person, howMany=2):
     global masterFriendList
     masterFriendList = []
 
-    listOfReaderObj = list(readerObj.keys()) #Create a list of the two best friends
-    howManyInt = int(howMany)
-    print("second master of dot prods", masterDotProds)
+    listOfReaderObj = list(readerObj.keys()) #Create a list of the  best friends
+    howManyInt = int(howMany) #convert to int
 
-    result = list(zip(masterDotProds, listOfReaderObj))
-    newRes = list(filter(lambda x: x[1] != person, result))
-    newRes.sort(key=lambda x: x[0])
+    result = list(zip(masterDotProds, listOfReaderObj)) #zip prods to friend names
+    newRes = list(filter(lambda x: x[1] != person, result)) #filter out the person name
+    newRes.sort(key=lambda x: x[0]) #sort the results by the first value in dict
 
-    newResList = newRes[-howManyInt:]
+    newResList = newRes[-howManyInt:] #number of friends to retrieve
 
     for tup in newResList:
         masterFriendList.append(tup[1])
@@ -128,26 +127,27 @@ def friends(person, howMany=2):
 def dotProd(person, howMany=2):
     '''Calculate the dot products of each person of a given person'''
     global masterDotProds
-    masterDotProds = []
+    masterDotProds = [] #reset list so func can be called multiple times
 
-    initialValue = readerObj.get(person)
+    initialValue = readerObj.get(person) #get the value for key of person
 
     for k,v in readerObj.items():
-        res = addDotProd(initialValue, v)
+        res = addDotProd(initialValue, v) #call addDotProd to calculate the dot prods
         masterDotProds.append(res)
 
-    return masterDotProds
+    return masterDotProds 
 
 def report(howMany=2):
+    '''Get the two best friends and recommendations for each user'''
     listOfReaders = list(readerObj.keys())
-    listOfReaders.sort()
+    listOfReaders.sort() #sort list of readers alphabetically
 
     result = ""
     for reader in listOfReaders:
-        global masterDotProds
+        global masterDotProds #need to set global variables in order to reset on multiple function calls
         global masterFriendList
         masterDotProds = []
         masterFriendList = []
         dotProd(reader)
-        result += f"\n{reader}: {friends(reader)}\n{recommend(reader)}\n"
+        result += f"\n{reader}: {friends(reader)}\n{recommend(reader)}\n" #format the result for report
     return result    

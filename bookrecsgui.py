@@ -12,15 +12,18 @@ from breezypythongui import EasyFrame
 import bookrecs
 
 class FriendRecs(EasyFrame):
+    ''' GUI to interact with bookrecs.py '''
     def __init__(self):
+        ''' set initial interface '''
         EasyFrame.__init__(self)
-        self['background'] = "#99B898"
+        self['background'] = "#99B898" 
         self.friends = self.addButton(text="Friends", row=0, column=0, command=self.friendsBox)
         self.reccomend = self.addButton(text="Recommend", row=0, column=1, command=self.recommendBox)
         self.report = self.addButton(text="Report", row=0, column=3, command=self.startRep)
         
 
     def friendsBox(self):
+        ''' displayed when user clicks friends button '''
         EasyFrame.__init__(self)
         self['background'] = "#FFD300" 
         self.addLabel(text = "Friends", row=0, column=0, columnspan=2, sticky="NSEW")
@@ -35,6 +38,7 @@ class FriendRecs(EasyFrame):
         self.cancel = self.addButton(text="Cancel", row=3, column=1, command=self.__init__)
 
     def startFriends(self):
+        ''' show top friends '''
         try:
             friend = self.friendInput.getText()
             numFriends = self.numberFriendInput.getNumber()
@@ -43,9 +47,11 @@ class FriendRecs(EasyFrame):
             self.outputArea.setText(bookrecs.friends(friend, numFriends))
         except TypeError:
             self.messageBox(title="ERROR", message="Reader not found, try again")
+
     def recommendBox(self):
+        ''' displayed when user clicks recommend button '''
         EasyFrame.__init__(self)
-        self['background'] = "#355C7D"
+        self['background'] = "#355C7D" 
         self.addLabel(text = "Recommendations", row=0, column=0, columnspan=2, sticky="NSEW")
         self.addLabel(text = "Reader:", row=1, column=0)
         self.recFriend = self.addTextField(text="", row=1, column=1)
@@ -59,6 +65,7 @@ class FriendRecs(EasyFrame):
         self.cancel = self.addButton(text="Cancel", row=3, column=1, command=self.__init__)
 
     def startRecs(self):
+        ''' show top recommendations '''
         try:
             friend = self.recFriend.getText()
             numFriends = self.recFriendNum.getNumber()
@@ -71,8 +78,9 @@ class FriendRecs(EasyFrame):
             self.messageBox(title="ERROR", message="Reader not found, try again")
     
     def startRep(self):
+        ''' displayed when user clicks report button '''
         self.repOutputArea = self.addTextArea("", row=5, column=0, columnspan=2, width=50, height=15)
-        self.repOutputArea['background'] = "#F8B195"
+        self.repOutputArea['background'] = "#F8B195" 
         self.repOutputArea.setText(bookrecs.report())
         
 def main():
