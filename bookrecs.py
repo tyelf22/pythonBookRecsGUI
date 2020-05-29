@@ -1,7 +1,7 @@
 ''' Tyson Elfors
-5/21/20
+5/29/20
 CS-1410
-Project 2 - Book Reccomendations
+Project 3 - Book Reccomendations
 '''
 
 """I declare that the following source code was written solely by me.
@@ -47,14 +47,11 @@ def addDotProd(arr1, arr2):
     return total  
 
 
-def recommend(person, howMany):
+def recommend(person, howMany=2):
     '''Produce the reccomended books given each friend'''
     howManyInt = int(howMany)
     
     pers = person
-
-    # fOne = friendList[0]
-    # fTwo = friendList[1]
 
     listOfFriendDots = []
     for friend in masterFriendList:
@@ -64,18 +61,10 @@ def recommend(person, howMany):
     zippedListOfFriends = []
     for items in zip(*listOfFriendDots[:howManyInt]):
         zippedListOfFriends.append(items)
-
-            
         
-
+        
     persDots = readerObj.get(pers)
-    # fOneDots = readerObj.get(fOne)
-    # fTwoDots = readerObj.get(fTwo)
-    # print("fOneDots and fTwoDots : ", fOneDots, fTwoDots)
 
-    # zipped = zip(fOneDots, fTwoDots)
-    # zippedList = list(zipped)
-    # print('zipped list', zippedList)
     
     maxOfFriendDots = []
     for tup in zippedListOfFriends:
@@ -97,17 +86,20 @@ def recommend(person, howMany):
             iterate += 1
 
     listOfBooks = []
-    # print(f"Recommendations for {person} : ") #print the recommended books
+    print(f"Recommendations for {person} : ") #print the recommended books
     for i in listOfIndexes:
-        listOfBooks.append(f"{bookArr[i]}\n")
-    print("listOfBooks = ", listOfBooks)
-    return listOfBooks
+        listOfBooks.append(bookArr[i])
+    print(listOfBooks)
+    return '\n'.join(map(str, listOfBooks))
     
 
 
 # def friends(arrOfDotProds, person, howMany):
-def friends(person, howMany):
+def friends(person, howMany=2):
     '''Calculates the two best friends of a person'''
+    global masterFriendList
+    masterFriendList = []
+
     listOfReaderObj = list(readerObj.keys()) #Create a list of the two best friends
     howManyInt = int(howMany)
     print("second master of dot prods", masterDotProds)
@@ -117,50 +109,45 @@ def friends(person, howMany):
     newRes.sort(key=lambda x: x[0])
 
     newResList = newRes[-howManyInt:]
-    # biggerFriendList = []
+
     for tup in newResList:
         masterFriendList.append(tup[1])
-    print("Mclovin's five best friends : ", masterFriendList)
+    print("{person}'s five best friends : ", masterFriendList)
     
-    # friendList = []
-    # friendOne = newRes[-1][1]
-    # friendTwo = newRes[-2][1]
-    # friendList.append(friendOne)
-    # friendList.append(friendTwo)
-    # friendList.sort()
 
-    # recommend(friendList, person)
-    # recommend(biggerFriendList, person, howMany)
     print("masterFriendList = ", masterFriendList)
-    return masterFriendList
+
+    masterFriendList.sort()
+
+    if len(masterFriendList) > 2:
+        return '\n'.join(map(str, masterFriendList))
+    else:   
+        return ', '.join(map(str, masterFriendList)) 
     
 #initialize person to find dot prod
-def dotProd(person, howMany):
+def dotProd(person, howMany=2):
     '''Calculate the dot products of each person of a given person'''
+    global masterDotProds
+    masterDotProds = []
+
     initialValue = readerObj.get(person)
 
     for k,v in readerObj.items():
         res = addDotProd(initialValue, v)
         masterDotProds.append(res)
 
-    print("masterDotProds = ", masterDotProds)
     return masterDotProds
-    # friends(dotProds, person, howMany)
 
+def report(howMany=2):
+    listOfReaders = list(readerObj.keys())
+    listOfReaders.sort()
 
-# def main():
-#     """ This is a program computes book recommendations for readers based on other readers
-#     with similar tastes in books. 
-#     """
-#     initialPerson = input("Who would you like to find recommendations for? : ") 
-#     howMany = input("How many friends would you like to see? : ")
-
-#     availablePeople = list(readerObj.keys())   
-#     if initialPerson in availablePeople:
-#         dotProd(initialPerson, howMany)  #call function with person name
-#         # friends(initialPerson, howMany)
-#         recommend(initialPerson, howMany)
-#     else:
-#         print('Reader not found, try again')
-    
-# main()
+    result = ""
+    for reader in listOfReaders:
+        global masterDotProds
+        global masterFriendList
+        masterDotProds = []
+        masterFriendList = []
+        dotProd(reader)
+        result += f"\n{reader}: {friends(reader)}\n{recommend(reader)}\n"
+    return result    
